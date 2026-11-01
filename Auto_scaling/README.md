@@ -328,7 +328,7 @@ A 503 means the ALB has no healthy targets. I check target health and its reason
 Private instances have no public IPs and no inbound path from the internet, so only the ALB is exposed, which reduces the attack surface. They still need outbound access to install packages and talk to SSM, so a NAT gateway in a public subnet translates their traffic to its Elastic IP. The trade-off is cost and a single point of failure: one shared NAT is cheaper for dev, while production uses one NAT per AZ (`single_nat_gateway = false`).
 
 
-**5. What is Autoscaling?
+**5. What is Autoscaling?**
 Amazon EC2 Auto Scaling is a fully managed AWS service designed to automatically adjust the number of compute instances in your application fleet based on demand. It ensures you have the correct amount of computing power running to handle the load of your applications while minimizing costs.
 
 Key Benefits
@@ -339,7 +339,7 @@ Cost Optimization: Scales down your infrastructure during periods of low demand 
 Elasticity: Seamlessly handles sudden spikes in traffic (like flash sales or viral application events) by scaling out instantly.
 
 
-**6. How Autoscaling works?
+**6. How Autoscaling works?**
 Auto Scaling works by continuously monitoring your application's demand and automatically adjusting the number of EC2 instances in your Auto Scaling Group (ASG) to match that demand.
 
 Here is the step-by-step lifecycle of how it operates:
