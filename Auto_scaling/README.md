@@ -322,8 +322,50 @@ EC2 health checks only detect that the VM or its status checks failed. ELB healt
 
 **4. Users get HTTP 503 from the ALB. How do you troubleshoot it?**
 A 503 means the ALB has no healthy targets. I check target health and its reason code, confirm the ASG instances are `InService` and registered, test `curl localhost/` on an instance through SSM, check `systemctl status nginx` and `/var/log/cloud-init-output.log`, verify the health check path returns 200, and confirm the instance security group allows the app port from the ALB security group. Then I check that scaling activity is not mid-replacement.
-**5. What is Autoscaling?
-**6. How Autoscaling works?
+
 
 **5. Why are the instances in private subnets, and what does the NAT gateway do?**
 Private instances have no public IPs and no inbound path from the internet, so only the ALB is exposed, which reduces the attack surface. They still need outbound access to install packages and talk to SSM, so a NAT gateway in a public subnet translates their traffic to its Elastic IP. The trade-off is cost and a single point of failure: one shared NAT is cheaper for dev, while production uses one NAT per AZ (`single_nat_gateway = false`).
+
+
+**5. What is Autoscaling?
+Amazon EC2 Auto Scaling is a fully managed AWS service designed to automatically adjust the number of compute instances in your application fleet based on demand. It ensures you have the correct amount of computing power running to handle the load of your applications while minimizing costs.
+
+Key Benefits
+High Availability: Automatically detects when an instance is unhealthy or unresponsive, terminates it, and launches a fresh replacement instance.
+
+Cost Optimization: Scales down your infrastructure during periods of low demand (like nights or weekends) so you aren’t paying for idle servers.
+
+Elasticity: Seamlessly handles sudden spikes in traffic (like flash sales or viral application events) by scaling out instantly.
+
+
+**6. How Autoscaling works?
+Auto Scaling works by continuously monitoring your application's demand and automatically adjusting the number of EC2 instances in your Auto Scaling Group (ASG) to match that demand.
+
+Here is the step-by-step lifecycle of how it operates:
+
+1. The Foundation:
+ Defining the BlueprintBefore scaling can happen, you set up the structural rules:
+
+ Launch Template: Defines what kind of server to spin up (AMI, instance type, security groups, startup scripts).
+ Auto Scaling Group (ASG): Sets the boundaries for your fleet—specifically the Minimum, Desired, and Maximum number of instances allowed to     run.
+ 
+ 2. Continuous Monitoring
+AWS continuously monitors the health and performance of your instances using:
+
+CloudWatch Metrics: Tracks resource utilization like CPU usage, network traffic, or memory (via custom metrics).
+Load Balancer Health Checks: If you use an Application Load Balancer (ALB), it checks if your application is actively responding to requests.EC2 Status Checks: Detects underlying hardware failures, network dropouts, or hypervisor issues.
+
+3. Triggering a Scaling Event
+When a predefined threshold is crossed (e.g., average CPU utilization exceeds $70\%$ for 5 consecutive minutes, or a scheduled time is reached), a Scaling Policy is triggered.
+
+Scale-Out (Adding Capacity):
+1.The ASG calculates how many new instances are needed based on your policy.
+2.It requests new instances using your Launch Template.
+3.Once the instances launch and pass their health checks, they are automatically registered with your Load Balancer to start taking live traffic.
+
+Scale-In (Reducing Capacity):
+When traffic drops and resource utilization falls below your low-watermark threshold, 
+1.the ASG decides to remove instances.
+2.It selects an instance to terminate (prioritizing older instances or unbalanced Availability Zones).
+3.The instance is safely deregistered from the Load Balancer so it stops receiving new requests, finishes any active connections (connection draining), and is then terminated.
