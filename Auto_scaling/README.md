@@ -312,23 +312,29 @@ Billed while running: NAT gateway (hourly plus data), ALB (hourly plus LCUs), tw
 ## questions and answers
 
 **1. How does your Auto Scaling group decide when to add or remove instances?**
+
 I used a target tracking policy on `ASGAverageCPUUtilization` with a 60% target. AWS creates two CloudWatch alarms. When the group average stays above the target, the policy calculates the capacity needed to bring it back to 60% and raises desired capacity, up to the max of 4. When CPU stays low for a longer period it scales in gradually, never below the minimum of 2. Instances get a warmup period so their boot-time CPU does not skew the metric.
 
 **2. What is the difference between a Launch Template and an Auto Scaling group?**
+
 The Launch Template is the instance blueprint: AMI, type, key pair, security groups, user data, IAM profile, tags. The ASG is the controller that decides how many instances to run, in which subnets and AZs, how to check their health and when to scale. Changing the template creates a new version; the ASG picks it up and an instance refresh rolls the instances gradually.
 
 **3. Explain EC2 versus ELB health checks. Which would you use in production?**
+
 EC2 health checks only detect that the VM or its status checks failed. ELB health checks request the application path through the load balancer and detect a crashed or hung Nginx. In this project the brief asks for EC2, so a crashed app is removed from the load balancer but not replaced. In production I would use ELB so the ASG also replaces instances the ALB marks unhealthy, with a grace period long enough for user data to finish.
 
 **4. Users get HTTP 503 from the ALB. How do you troubleshoot it?**
+
 A 503 means the ALB has no healthy targets. I check target health and its reason code, confirm the ASG instances are `InService` and registered, test `curl localhost/` on an instance through SSM, check `systemctl status nginx` and `/var/log/cloud-init-output.log`, verify the health check path returns 200, and confirm the instance security group allows the app port from the ALB security group. Then I check that scaling activity is not mid-replacement.
 
 
 **5. Why are the instances in private subnets, and what does the NAT gateway do?**
+
 Private instances have no public IPs and no inbound path from the internet, so only the ALB is exposed, which reduces the attack surface. They still need outbound access to install packages and talk to SSM, so a NAT gateway in a public subnet translates their traffic to its Elastic IP. The trade-off is cost and a single point of failure: one shared NAT is cheaper for dev, while production uses one NAT per AZ (`single_nat_gateway = false`).
 
 
 **5. What is Autoscaling?**
+
 Amazon EC2 Auto Scaling is a fully managed AWS service designed to automatically adjust the number of compute instances in your application fleet based on demand. It ensures you have the correct amount of computing power running to handle the load of your applications while minimizing costs.
 
 Key Benefits
@@ -340,6 +346,7 @@ Elasticity: Seamlessly handles sudden spikes in traffic (like flash sales or vir
 
 
 **6. How Autoscaling works?**
+
 Auto Scaling works by continuously monitoring your application's demand and automatically adjusting the number of EC2 instances in your Auto Scaling Group (ASG) to match that demand.
 
 Here is the step-by-step lifecycle of how it operates:
