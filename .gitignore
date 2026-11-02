@@ -1,0 +1,11 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfplan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+# Secrets files would go here; terraform.tfvars is committed on purpose because it holds no secrets
+secrets.auto.tfvars
