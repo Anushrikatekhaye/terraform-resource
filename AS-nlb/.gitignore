@@ -1,0 +1,30 @@
+# Terraform working data and state (state may contain sensitive values)
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+tfplan
+
+# Local/secret variable files (terraform.tfvars is committed - it holds no secrets)
+*.auto.tfvars
+secrets.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Backend settings are account-specific
+backend.hcl
+
+# Never commit keys or credentials
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.env
+.aws/
+
+# Commit .terraform.lock.hcl so provider versions are reproducible
+!.terraform.lock.hcl
