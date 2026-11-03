@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 665" width="960" height="665" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#232F3E"/>
+    </marker>
+    <marker id="arrowGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="665" fill="#ffffff"/>
+  <text x="20" y="26" font-size="15" font-weight="600" fill="#232F3E">AWS NLB + EC2 Auto Scaling Group (Terraform) - region ap-south-1</text>
+
+  <!-- Internet + IGW -->
+  <ellipse cx="480" cy="52" rx="85" ry="22" fill="#ffffff" stroke="#232F3E" stroke-width="1.5"/>
+  <text x="480" y="57" text-anchor="middle" fill="#232F3E">Internet users</text>
+  <line x1="480" y1="74" x2="480" y2="110" stroke="#232F3E" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- VPC -->
+  <rect x="30" y="128" width="900" height="410" rx="10" fill="none" stroke="#8C4FFF" stroke-width="2"/>
+  <text x="914" y="149" text-anchor="end" font-weight="600" fill="#8C4FFF">VPC 10.0.0.0/16 (DNS hostnames + resolution enabled)</text>
+
+  <rect x="410" y="110" width="140" height="34" rx="4" fill="#8C4FFF"/>
+  <text x="480" y="132" text-anchor="middle" fill="#ffffff" font-weight="600">Internet Gateway</text>
+  <line x1="480" y1="144" x2="480" y2="172" stroke="#232F3E" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Public subnets -->
+  <rect x="50" y="160" width="430" height="130" rx="6" fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <rect x="500" y="160" width="430" height="130" rx="6" fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="62" y="180" font-size="12" fill="#1b5e20">Public subnet A - AZ a - 10.0.1.0/24</text>
+  <text x="918" y="180" text-anchor="end" font-size="12" fill="#1b5e20">Public subnet B - AZ b - 10.0.2.0/24</text>
+
+  <!-- NLB -->
+  <rect x="300" y="172" width="360" height="36" rx="5" fill="#8C4FFF"/>
+  <text x="480" y="195" text-anchor="middle" fill="#ffffff" font-weight="600">Network Load Balancer - TCP :80 - cross-zone</text>
+
+  <!-- NAT gateways -->
+  <rect x="70" y="226" width="140" height="46" rx="4" fill="#8C4FFF"/>
+  <text x="140" y="254" text-anchor="middle" fill="#ffffff" font-weight="600">NAT Gateway</text>
+  <rect x="790" y="226" width="140" height="46" rx="4" fill="#ffffff" stroke="#8C4FFF" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="860" y="254" text-anchor="middle" fill="#8C4FFF" font-size="12">NAT GW (if HA mode)</text>
+
+  <!-- Private subnets -->
+  <rect x="50" y="335" width="430" height="125" rx="6" fill="#E3F2FD" stroke="#1E88E5" stroke-width="1.5"/>
+  <rect x="500" y="335" width="430" height="125" rx="6" fill="#E3F2FD" stroke="#1E88E5" stroke-width="1.5"/>
+  <text x="62" y="452" font-size="12" fill="#0d47a1">Private subnet A - AZ a - 10.0.11.0/24</text>
+  <text x="918" y="452" text-anchor="end" font-size="12" fill="#0d47a1">Private subnet B - AZ b - 10.0.12.0/24</text>
+
+  <!-- ASG boundary -->
+  <rect x="38" y="312" width="904" height="190" rx="8" fill="none" stroke="#ED7100" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="480" y="494" text-anchor="middle" font-weight="600" fill="#b45309">Auto Scaling Group - min 2 / desired 2 / max 4 - health check type ELB</text>
+
+  <!-- EC2 instances -->
+  <rect x="290" y="368" width="150" height="60" rx="5" fill="#ED7100"/>
+  <text x="365" y="394" text-anchor="middle" fill="#ffffff" font-weight="600">EC2 t3.micro</text>
+  <text x="365" y="413" text-anchor="middle" fill="#ffffff" font-size="12">Ubuntu 24.04 + Nginx</text>
+  <rect x="540" y="368" width="150" height="60" rx="5" fill="#ED7100"/>
+  <text x="615" y="394" text-anchor="middle" fill="#ffffff" font-weight="600">EC2 t3.micro</text>
+  <text x="615" y="413" text-anchor="middle" fill="#ffffff" font-size="12">Ubuntu 24.04 + Nginx</text>
+
+  <rect x="100" y="368" width="150" height="60" rx="5" fill="none" stroke="#ED7100" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="175" y="403" text-anchor="middle" fill="#b45309" font-size="12">scale-out capacity</text>
+  <rect x="730" y="368" width="150" height="60" rx="5" fill="none" stroke="#ED7100" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="805" y="403" text-anchor="middle" fill="#b45309" font-size="12">scale-out capacity</text>
+
+  <!-- NLB -> EC2 -->
+  <line x1="365" y1="208" x2="365" y2="366" stroke="#232F3E" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="615" y1="208" x2="615" y2="366" stroke="#232F3E" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="420" y1="208" x2="552" y2="366" stroke="#232F3E" stroke-width="1" marker-end="url(#arrow)"/>
+  <line x1="540" y1="208" x2="428" y2="366" stroke="#232F3E" stroke-width="1" marker-end="url(#arrow)"/>
+  <text x="480" y="300" text-anchor="middle" font-size="11" fill="#374151">cross-zone: any NLB node</text>
+  <text x="480" y="314" text-anchor="middle" font-size="11" fill="#374151">can reach healthy targets in both AZs</text>
+
+  <!-- Private -> NAT (outbound) -->
+  <line x1="140" y1="335" x2="140" y2="274" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowGrey)"/>
+  <text x="148" y="306" font-size="11" fill="#374151">0.0.0.0/0 to NAT</text>
+  <line x1="860" y1="335" x2="860" y2="274" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowGrey)"/>
+  <text x="852" y="306" text-anchor="end" font-size="11" fill="#374151">(or shared NAT in AZ a)</text>
+
+  <!-- Supporting services -->
+  <rect x="60" y="570" width="270" height="52" rx="5" fill="#E7157B"/>
+  <text x="195" y="593" text-anchor="middle" fill="#ffffff" font-weight="600">CloudWatch alarms</text>
+  <text x="195" y="611" text-anchor="middle" fill="#ffffff" font-size="12">avg CPU vs 60% target (target tracking)</text>
+  <line x1="195" y1="570" x2="195" y2="504" stroke="#E7157B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="205" y="556" font-size="11" fill="#374151">scale out / scale in</text>
+
+  <rect x="380" y="570" width="240" height="52" rx="5" fill="#3F8624"/>
+  <text x="500" y="593" text-anchor="middle" fill="#ffffff" font-weight="600">S3 bucket - Terraform state</text>
+  <text x="500" y="611" text-anchor="middle" fill="#ffffff" font-size="12">versioned, encrypted, native lockfile</text>
+
+  <rect x="670" y="570" width="240" height="52" rx="5" fill="#DD344C"/>
+  <text x="790" y="593" text-anchor="middle" fill="#ffffff" font-weight="600">IAM role + SSM</text>
+  <text x="790" y="611" text-anchor="middle" fill="#ffffff" font-size="12">Session Manager, no open SSH</text>
+  <line x1="790" y1="570" x2="790" y2="504" stroke="#DD344C" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="800" y="556" font-size="11" fill="#374151">instance profile</text>
+
+  <text x="20" y="652" font-size="11" fill="#6b7280">Solid arrows: client traffic. Grey dashed: outbound-only internet via NAT Gateway. Orange dashed: Auto Scaling Group boundary and spare scale-out capacity (up to 4 instances).</text>
+</svg>
